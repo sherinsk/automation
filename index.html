@@ -1,11 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
   <title>Order Error Test</title>
 
+
   <style>
+
     * {
       box-sizing: border-box;
     }
@@ -83,6 +92,7 @@
       background: #333;
     }
 
+
     /* Status */
 
     .status-normal {
@@ -94,6 +104,7 @@
       color: #dc2626;
       font-weight: 500;
     }
+
 
     /* Pagination */
 
@@ -134,6 +145,7 @@
       opacity: 0.4;
       cursor: not-allowed;
     }
+
 
     /* Modal */
 
@@ -200,6 +212,7 @@
       justify-content: flex-end;
     }
 
+
     /* Modal action button */
 
     .modal-action-btn {
@@ -218,6 +231,7 @@
     .modal-action-btn:hover {
       background: #333;
     }
+
 
     /* Toast */
 
@@ -251,6 +265,7 @@
       font-weight: bold;
     }
 
+
     @media (max-width: 600px) {
 
       body {
@@ -266,14 +281,19 @@
         align-items: flex-start;
         gap: 10px;
       }
+
     }
 
   </style>
+
 </head>
+
 
 <body>
 
+
   <div class="container">
+
 
     <!-- Header -->
 
@@ -305,14 +325,31 @@
         <thead>
 
           <tr>
-            <th>ID</th>
-            <th>Customer</th>
-            <th>PO Number</th>
-            <th>Status</th>
-            <th>Action</th>
+
+            <th>
+              ID
+            </th>
+
+            <th>
+              Customer
+            </th>
+
+            <th>
+              PO Number
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Action
+            </th>
+
           </tr>
 
         </thead>
+
 
         <tbody id="tableBody"></tbody>
 
@@ -332,10 +369,12 @@
         Previous
       </button>
 
+
       <div
         id="pagination"
         class="pagination"
       ></div>
+
 
       <button
         id="nextBtn"
@@ -349,9 +388,9 @@
   </div>
 
 
-  <!-- ==============================
+  <!-- =====================================================
        MODAL
-  ============================== -->
+  ====================================================== -->
 
   <div
     id="modalOverlay"
@@ -360,6 +399,7 @@
 
     <div class="modal">
 
+
       <button
         id="closeModal"
         class="close-btn"
@@ -367,14 +407,17 @@
         ×
       </button>
 
+
       <h3>
         Order Details
       </h3>
+
 
       <div
         id="modalInfo"
         class="modal-info"
       ></div>
+
 
       <div class="modal-footer">
 
@@ -392,9 +435,9 @@
   </div>
 
 
-  <!-- ==============================
+  <!-- =====================================================
        ERROR TOAST
-  ============================== -->
+  ====================================================== -->
 
   <div
     id="errorToast"
@@ -413,7 +456,7 @@
   <script>
 
     // =====================================================
-    // CONFIG
+    // CONFIGURATION
     // =====================================================
 
     const TOTAL_ROWS = 1000;
@@ -426,13 +469,47 @@
       );
 
 
-    // Percentage of rows that will have errors.
+    // =====================================================
+    // FIXED ERROR IDS
+    // =====================================================
     //
-    // 0.20 = 20%
+    // These IDs NEVER change between page reloads.
     //
-    // Approximately 200 rows will have errors.
+    // If ID 2 is here:
+    //     ID 2 -> Error
+    //
+    // If ID 4 is not here:
+    //     ID 4 -> Normal
+    //
+    // Change this list whenever you want different
+    // rows to produce the error.
+    //
+    // =====================================================
 
-    const ERROR_PERCENTAGE = 0.20;
+    const ERROR_IDS = [
+
+      2,
+      3,
+      7,
+      18,
+      25,
+      31,
+      45,
+      67,
+      89,
+      102,
+      150,
+      201,
+      250,
+      301,
+      350,
+      444,
+      500,
+      678,
+      789,
+      921
+
+    ];
 
 
     // =====================================================
@@ -453,45 +530,54 @@
         "tableBody"
       );
 
+
     const pagination =
       document.getElementById(
         "pagination"
       );
+
 
     const pageInfo =
       document.getElementById(
         "pageInfo"
       );
 
+
     const previousBtn =
       document.getElementById(
         "previousBtn"
       );
+
 
     const nextBtn =
       document.getElementById(
         "nextBtn"
       );
 
+
     const modalOverlay =
       document.getElementById(
         "modalOverlay"
       );
+
 
     const modalInfo =
       document.getElementById(
         "modalInfo"
       );
 
+
     const closeModal =
       document.getElementById(
         "closeModal"
       );
 
+
     const modalActionBtn =
       document.getElementById(
         "modalActionBtn"
       );
+
 
     const errorToast =
       document.getElementById(
@@ -512,25 +598,17 @@
       i++
     ) {
 
+
       /*
-       * Randomly decide if this row
-       * should have an error.
+       * Check the fixed ERROR_IDS list.
        *
-       * This happens ONLY ONCE.
+       * NO Math.random() here.
        *
-       * Therefore:
-       *
-       * ID 2 -> error
-       * ID 3 -> error
-       * ID 4 -> normal
-       *
-       * Those states will remain the same
-       * when changing pagination.
+       * Therefore the result is always the same.
        */
 
       const hasError =
-        Math.random() <
-        ERROR_PERCENTAGE;
+        ERROR_IDS.includes(i);
 
 
       data.push({
@@ -582,15 +660,16 @@
 
       rows.forEach(row => {
 
+
         const tr =
           document.createElement(
             "tr"
           );
 
 
-        // -----------------------------------------------
+        // =================================================
         // STATUS
-        // -----------------------------------------------
+        // =================================================
 
         let statusHTML;
 
@@ -598,25 +677,29 @@
         if (row.hasError) {
 
           statusHTML = `
+
             <span class="status-error">
               Something went wrong
             </span>
+
           `;
 
         } else {
 
           statusHTML = `
+
             <span class="status-normal">
               Pending
             </span>
+
           `;
 
         }
 
 
-        // -----------------------------------------------
+        // =================================================
         // ROW HTML
-        // -----------------------------------------------
+        // =================================================
 
         tr.innerHTML = `
 
@@ -624,17 +707,21 @@
             ${row.id}
           </td>
 
+
           <td>
             ${row.customer}
           </td>
+
 
           <td>
             ${row.po}
           </td>
 
+
           <td>
             ${statusHTML}
           </td>
+
 
           <td>
 
@@ -657,9 +744,9 @@
       });
 
 
-      // -----------------------------------------------
+      // =================================================
       // VIEW BUTTONS
-      // -----------------------------------------------
+      // =================================================
 
       const viewButtons =
         document.querySelectorAll(
@@ -678,6 +765,7 @@
                 Number(
                   this.dataset.id
                 );
+
 
               openModal(id);
 
@@ -719,6 +807,7 @@
         page <= TOTAL_PAGES;
         page++
       ) {
+
 
         const button =
           document.createElement(
@@ -767,14 +856,16 @@
 
 
     // =====================================================
-    // PREVIOUS
+    // PREVIOUS PAGE
     // =====================================================
 
     previousBtn.addEventListener(
       "click",
       function () {
 
-        if (currentPage > 1) {
+        if (
+          currentPage > 1
+        ) {
 
           currentPage--;
 
@@ -787,7 +878,7 @@
 
 
     // =====================================================
-    // NEXT
+    // NEXT PAGE
     // =====================================================
 
     nextBtn.addEventListener(
@@ -840,6 +931,7 @@
 
         <br>
 
+
         <strong>
           Customer:
         </strong>
@@ -847,6 +939,7 @@
         ${row.customer}
 
         <br>
+
 
         <strong>
           PO:
@@ -856,21 +949,29 @@
 
         <br>
 
+
         <strong>
           Status:
         </strong>
 
+
         ${
           row.hasError
+
             ? `
+
               <span class="status-error">
                 Something went wrong
               </span>
+
             `
+
             : `
+
               <span class="status-normal">
                 Pending
               </span>
+
             `
         }
 
@@ -896,13 +997,16 @@
           "show"
         );
 
+
         selectedRowId = null;
 
       }
     );
 
 
-    // Click outside modal
+    // =====================================================
+    // CLICK OUTSIDE MODAL
+    // =====================================================
 
     modalOverlay.addEventListener(
       "click",
@@ -917,6 +1021,7 @@
             "show"
           );
 
+
           selectedRowId = null;
 
         }
@@ -926,14 +1031,13 @@
 
 
     // =====================================================
-    // MODAL ACTION BUTTON
+    // PROCESS ORDER
     // =====================================================
 
     modalActionBtn.addEventListener(
       "click",
       function () {
 
-        // Find currently selected row
 
         const row =
           data.find(
@@ -948,14 +1052,9 @@
         }
 
 
-        /*
-         * THIS IS THE IMPORTANT PART
-         *
-         * Only rows that were randomly
-         * assigned hasError = true
-         * will show the error toast.
-         */
-
+        // =================================================
+        // ONLY FIXED ERROR IDS SHOW ERROR
+        // =================================================
 
         if (row.hasError) {
 
@@ -963,19 +1062,15 @@
             row.id
           );
 
+
           return;
 
         }
 
 
-        /*
-         * Normal row:
-         *
-         * No error toast.
-         *
-         * You can put your success
-         * behavior here.
-         */
+        // =================================================
+        // NORMAL ROW
+        // =================================================
 
         console.log(
           `Order ${row.id} processed successfully`
@@ -1040,4 +1135,5 @@
   </script>
 
 </body>
+
 </html>
